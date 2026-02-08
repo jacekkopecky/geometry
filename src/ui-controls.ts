@@ -8,7 +8,7 @@ import {
   setUnfinished,
   viewParams,
 } from './state.js';
-import type { Circle, Point } from './types.js';
+import type { Point } from './types.js';
 
 // a move shorter than this time in milliseconds counts as a click
 const MIN_MOVE_TIME_MS = 100;
@@ -139,6 +139,8 @@ function mouseMove(e: MouseEvent) {
 }
 
 function mouseLeave() {
+  currentMouseStart = undefined;
+  currentMouseMoving = false;
   setCursorPosition(undefined);
   draw();
 }
