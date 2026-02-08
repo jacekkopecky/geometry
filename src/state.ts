@@ -1,3 +1,4 @@
+import { dist } from './nearest.js';
 import type { Circle, Point } from './types.js';
 
 const MIN_SCALE = 1;
@@ -62,8 +63,7 @@ export function addPoint(p: Point) {
     if (currentEndPoint) {
       // a circle added
       const [x, y] = currentStartPoint;
-      const [x2, y2] = currentEndPoint;
-      circles.push([x, y, Math.sqrt((x2 - x) ** 2 + (y2 - y) ** 2)]);
+      circles.push([x, y, dist(currentStartPoint, currentEndPoint)]);
     } else {
       // a single point added
       circles.push(p);

@@ -57,7 +57,8 @@ function mouseDown(e: MouseEvent) {
 function mouseUp(e: MouseEvent) {
   if (currentMouseStart && !currentMouseMoving) {
     // clicked without a move
-    addPoint(getCursorCoords(e));
+    const snap = !e.shiftKey;
+    addPoint(getCursorCoords(e, snap));
     draw();
   } else {
     draw();
@@ -67,21 +68,27 @@ function mouseUp(e: MouseEvent) {
 }
 
 function mouseMove(e: MouseEvent) {
-  const [x, y] = getCursorCoords(e);
-  setCursorPosition([x, y]);
+  if (currentMouseStart) {
+    // we're dragging the canvas
 
-  if (!currentMouseStart) {
-    if (currentStartPoint) {
-      setEndPoint([x, y]);
-    }
-    draw();
-  } else {
+    const [x, y] = getCursorCoords(e);
     viewParams.moveOffset(x - currentMouseStart[0], y - currentMouseStart[1]);
     draw();
 
     // recompute canvas coords as we've moved the offset
     currentMouseStart = getCursorCoords(e);
     currentMouseMoving = true;
+  } else {
+    // not dragging
+
+    const snap = !e.shiftKey;
+    const [x, y] = getCursorCoords(e, snap);
+    setCursorPosition([x, y]);
+
+    if (currentStartPoint) {
+      setEndPoint([x, y]);
+    }
+    draw();
   }
 }
 

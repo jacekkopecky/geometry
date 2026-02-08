@@ -1,3 +1,4 @@
+import { findNearestPoint } from './nearest.js';
 import { circles, currentCursor, currentEndPoint, currentStartPoint, viewParams } from './state.js';
 import type { Point } from './types.js';
 
@@ -7,6 +8,7 @@ const c = canvas.getContext('2d')!;
 const CROSS_STYLE = 'black';
 const CROSS_SIZE = 30;
 const POINT_RADIUS = 4;
+const SNAP_DISTANCE = CROSS_SIZE * Math.sqrt(2);
 
 window.addEventListener('load', resizeCanvas);
 window.addEventListener('resize', resizeCanvas);
@@ -76,11 +78,18 @@ function clearCanvas() {
   c.restore();
 }
 
-export function getCursorCoords(e: MouseEvent): Point {
+export function getCursorCoords(e: MouseEvent, snap = false): Point {
   const x = ((e.offsetX / c.canvas.offsetWidth - 0.5) * c.canvas.width) / viewParams.scale;
   const y = ((e.offsetY / c.canvas.offsetHeight - 0.5) * c.canvas.height) / viewParams.scale;
 
-  return [x - viewParams.offset[0], y - viewParams.offset[1]];
+  const point: Point = [x - viewParams.offset[0], y - viewParams.offset[1]];
+
+  if (snap) {
+    const nearest = findNearestPoint(point, circles, SNAP_DISTANCE / viewParams.scale);
+    if (nearest) return nearest;
+  }
+
+  return point;
 }
 
 function drawCursor() {
