@@ -5,7 +5,7 @@ export function findNearestPoint(
   circles: readonly Circle[],
   threshold: number,
 ): Point | undefined {
-  const point = nearestOnlyPoint(pos, circles, threshold);
+  const point = nearestPoint(pos, circles, threshold);
   if (point) return point;
 
   const circle = nearestPointOnCircles(pos, circles, threshold);
@@ -14,7 +14,21 @@ export function findNearestPoint(
   return undefined;
 }
 
-function nearestOnlyPoint(pos: Point, circles: readonly Circle[], threshold: number) {
+export function findNearestCircle(
+  pos: Point,
+  circles: readonly Circle[],
+  threshold: number,
+): Circle | undefined {
+  const circle = nearestCircle(pos, circles, threshold);
+  if (circle) return circle;
+
+  const point = nearestPoint(pos, circles, threshold);
+  if (point) return point;
+
+  return undefined;
+}
+
+function nearestPoint(pos: Point, circles: readonly Circle[], threshold: number) {
   const points = circles.filter((c) => isPoint(c));
 
   let minDist = threshold;
@@ -25,6 +39,24 @@ function nearestOnlyPoint(pos: Point, circles: readonly Circle[], threshold: num
     if (d < minDist) {
       minDist = d;
       closest = p;
+    }
+  }
+
+  return closest;
+}
+
+function nearestCircle(pos: Point, circlesAndPoints: readonly Circle[], threshold: number) {
+  const circles = circlesAndPoints.filter((c) => !isPoint(c));
+
+  let minDist = threshold;
+  let closest;
+
+  for (const c of circles) {
+    const point = nearestPointOnCircle(pos, c);
+    const d = point ? dist(point, pos) : Infinity;
+    if (d < minDist) {
+      minDist = d;
+      closest = c;
     }
   }
 

@@ -39,3 +39,16 @@ canvas {
     border-radius: 0.2em;
   }
 }
+
+.delete {
+  font-size: 1.5em;
+  padding: 0.1em 0.2em;
+  border-radius: 0.2em;
+  border: solid thin black;
+  user-select: none;
+  cursor: pointer;
+
+  &.active {
+    background-color: #cff;
+  }
+}

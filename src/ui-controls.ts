@@ -1,8 +1,10 @@
-import { canvas, draw, getCursorCoords } from './canvas.js';
+import { canvas, draw, getCursorCoords, getNearestCircle } from './canvas.js';
 import { getCurrentColor, nextColor } from './colors.js';
+import { currentlyDeleting, toggleDelete } from './deleting.js';
 import { dist } from './nearest.js';
 import {
   addFromUnfinished,
+  deleteCircle,
   resetCircles,
   resetView,
   setCursorPosition,
@@ -97,7 +99,11 @@ function updateUnfinished() {
 }
 
 function mouseUp(e: MouseEvent) {
-  if (currentMouseStart && !currentMouseMoving) {
+  if (currentlyDeleting && !currentMouseMoving) {
+    deleteCircle(getNearestCircle(e));
+    toggleDelete();
+    draw();
+  } else if (currentMouseStart && !currentMouseMoving) {
     // clicked without a move
     const snap = !e.shiftKey;
     const startOtherRadius = currentRadiusStartPoint == null && (e.altKey || e.metaKey);
@@ -164,6 +170,10 @@ function keyUp(e: KeyboardEvent) {
     case 'c':
       nextColor();
       draw();
+      break;
+
+    case 'd':
+      toggleDelete();
       break;
   }
 }

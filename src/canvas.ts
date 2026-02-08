@@ -1,7 +1,7 @@
 import { getCurrentColor } from './colors.js';
-import { findNearestPoint } from './nearest.js';
+import { findNearestCircle, findNearestPoint } from './nearest.js';
 import { circles, currentCursor, currentUnfinished, viewParams } from './state.js';
-import type { Point } from './types.js';
+import type { Circle, Point } from './types.js';
 
 export const canvas = document.querySelector('canvas')!;
 const c = canvas.getContext('2d')!;
@@ -79,11 +79,15 @@ function clearCanvas() {
   c.restore();
 }
 
-export function getCursorCoords(e: MouseEvent, snap = false): Point {
+function getPointForEventCoords(e: MouseEvent): Point {
   const x = ((e.offsetX / c.canvas.offsetWidth - 0.5) * c.canvas.width) / viewParams.scale;
   const y = ((e.offsetY / c.canvas.offsetHeight - 0.5) * c.canvas.height) / viewParams.scale;
 
-  const point: Point = [x - viewParams.offset[0], y - viewParams.offset[1]];
+  return [x - viewParams.offset[0], y - viewParams.offset[1]];
+}
+
+export function getCursorCoords(e: MouseEvent, snap = false): Point {
+  const point = getPointForEventCoords(e);
 
   if (snap) {
     const nearest = findNearestPoint(point, circles, SNAP_DISTANCE / viewParams.scale);
@@ -91,6 +95,11 @@ export function getCursorCoords(e: MouseEvent, snap = false): Point {
   }
 
   return point;
+}
+
+export function getNearestCircle(e: MouseEvent): Circle | undefined {
+  const point = getPointForEventCoords(e);
+  return findNearestCircle(point, circles, SNAP_DISTANCE / viewParams.scale);
 }
 
 function drawCursor() {

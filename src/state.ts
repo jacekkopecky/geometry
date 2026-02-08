@@ -65,6 +65,15 @@ export function setUnfinished(c?: Circle) {
   currentUnfinished = c;
 }
 
+export function deleteCircle(c?: Circle) {
+  if (!c) return;
+  const index = circles.indexOf(c);
+  if (index > -1) {
+    circles.splice(index, 1);
+    saveState();
+  }
+}
+
 export function resetView() {
   viewParams._scale = DEFAULT_SCALE;
   viewParams._offset = [0, 0];
