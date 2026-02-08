@@ -172,6 +172,7 @@ function keyUp(e: KeyboardEvent) {
 
     case 'c':
       nextColor();
+      updateUnfinished();
       draw();
       break;
 
