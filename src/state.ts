@@ -1,4 +1,4 @@
-import { dist } from './nearest.js';
+import { dist, getCircleIntersections } from './nearest.js';
 import type { Circle, Point } from './types.js';
 
 const MIN_SCALE = 1;
@@ -63,7 +63,9 @@ export function addPoint(p: Point) {
     if (currentEndPoint) {
       // a circle added
       const [x, y] = currentStartPoint;
-      circles.push([x, y, dist(currentStartPoint, currentEndPoint)]);
+      const c: Circle = [x, y, dist(currentStartPoint, currentEndPoint)];
+      const intersections = getCircleIntersections(c, circles);
+      circles.push(c, ...intersections);
     } else {
       // a single point added
       circles.push(p);

@@ -11,7 +11,7 @@ the Napoleon's Problem.
 - [x] add a point (double click on center)
 - [x] save state in localStorage
 - [x] snapping to nearest point within some radius
-- [ ] snapping to nearest circle intersection within some radius
+- [x] snapping to nearest circle intersection within some radius
   - probably remember intersections so it becomes the above
 - [x] snapping to nearest point on a nearby circle
 - [x] reset to a single circle, or two points
