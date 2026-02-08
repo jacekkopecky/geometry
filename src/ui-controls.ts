@@ -174,6 +174,7 @@ function keyUp(e: KeyboardEvent) {
 
     case 'd':
       toggleDelete();
+      draw();
       break;
   }
 }

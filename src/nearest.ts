@@ -19,11 +19,11 @@ export function findNearestCircle(
   circles: readonly Circle[],
   threshold: number,
 ): Circle | undefined {
-  const circle = nearestCircle(pos, circles, threshold);
-  if (circle) return circle;
-
   const point = nearestPoint(pos, circles, threshold);
   if (point) return point;
+
+  const circle = nearestCircle(pos, circles, threshold);
+  if (circle) return circle;
 
   return undefined;
 }

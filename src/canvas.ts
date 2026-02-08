@@ -1,4 +1,5 @@
 import { getCurrentColor } from './colors.js';
+import { currentlyDeleting } from './deleting.js';
 import { findNearestCircle, findNearestPoint } from './nearest.js';
 import { circles, currentCursor, currentUnfinished, viewParams } from './state.js';
 import type { Circle, Point } from './types.js';
@@ -6,11 +7,13 @@ import type { Circle, Point } from './types.js';
 export const canvas = document.querySelector('canvas')!;
 const c = canvas.getContext('2d')!;
 
-const CROSS_STYLE = 'black';
-const CROSS_SIZE = 30;
+const PLUS_STYLE = 'black';
+const PLUS_SIZE = 30;
+const CROSS_STYLE = 'red';
+const CROSS_SIZE = PLUS_SIZE / Math.sqrt(2);
 const LINE_WIDTH = 1.5;
 const POINT_RADIUS = 3 * LINE_WIDTH;
-const SNAP_DISTANCE = CROSS_SIZE * Math.sqrt(2);
+const SNAP_DISTANCE = PLUS_SIZE * Math.sqrt(2);
 
 window.addEventListener('load', resizeCanvas);
 window.addEventListener('resize', resizeCanvas);
@@ -103,7 +106,13 @@ export function getNearestCircle(e: MouseEvent): Circle | undefined {
 }
 
 function drawCursor() {
-  if (currentCursor) drawCross(...currentCursor);
+  if (currentCursor) {
+    if (currentlyDeleting) {
+      drawCross(...currentCursor);
+    } else {
+      drawPlus(...currentCursor);
+    }
+  }
 }
 
 function drawCross(x: number, y: number) {
@@ -114,5 +123,16 @@ function drawCross(x: number, y: number) {
   c.lineTo(x + size, y + size);
   c.moveTo(x - size, y + size);
   c.lineTo(x + size, y - size);
+  c.stroke();
+}
+
+function drawPlus(x: number, y: number) {
+  c.strokeStyle = PLUS_STYLE;
+  c.beginPath();
+  const size = PLUS_SIZE / viewParams.scale;
+  c.moveTo(x - size, y);
+  c.lineTo(x + size, y);
+  c.moveTo(x, y + size);
+  c.lineTo(x, y - size);
   c.stroke();
 }
