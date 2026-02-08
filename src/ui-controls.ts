@@ -4,6 +4,7 @@ import { currentlyDeleting, toggleDelete } from './deleting.js';
 import { dist } from './nearest.js';
 import {
   addFromUnfinished,
+  circles,
   deleteCircle,
   resetCircles,
   resetView,
@@ -35,6 +36,7 @@ function setUpListeners() {
   canvas.addEventListener('mouseup', mouseUp);
   canvas.addEventListener('mouseleave', mouseLeave);
   document.addEventListener('keyup', keyUp);
+  document.addEventListener('keydown', keyDown);
 
   const resetButtons = document.querySelectorAll('button.reset');
   for (const btn of resetButtons) {
@@ -177,6 +179,17 @@ function keyUp(e: KeyboardEvent) {
       toggleDelete();
       draw();
       break;
+  }
+}
+
+function keyDown(e: KeyboardEvent) {
+  // cmd-z must be done on keydown, it doesn't get to keyup
+  if (e.key === 'z' && (e.metaKey || e.altKey || e.ctrlKey)) {
+    // undo - delete last circle
+    deleteCircle(circles.at(-1));
+    draw();
+    e.preventDefault();
+    return;
   }
 }
 
