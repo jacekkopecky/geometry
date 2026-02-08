@@ -2,19 +2,30 @@ import { canvas, draw, getCursorCoords } from './canvas.js';
 import {
   addPoint,
   currentStartPoint,
+  resetCircles,
   resetCurrents,
+  resetView,
   setCursorPosition,
   setEndPoint,
   viewParams,
 } from './state.js';
 import type { Point } from './types.js';
 
-canvas.addEventListener('wheel', mouseZoom);
-canvas.addEventListener('mousemove', mouseMove);
-canvas.addEventListener('mousedown', mouseDown);
-canvas.addEventListener('mouseup', mouseUp);
-canvas.addEventListener('mouseleave', mouseLeave);
-document.addEventListener('keydown', keyDown);
+window.addEventListener('load', setUpListeners);
+
+function setUpListeners() {
+  canvas.addEventListener('wheel', mouseZoom);
+  canvas.addEventListener('mousemove', mouseMove);
+  canvas.addEventListener('mousedown', mouseDown);
+  canvas.addEventListener('mouseup', mouseUp);
+  canvas.addEventListener('mouseleave', mouseLeave);
+  document.addEventListener('keydown', keyDown);
+
+  const resetButtons = document.querySelectorAll('button.reset');
+  for (const btn of resetButtons) {
+    btn.addEventListener('click', resetData);
+  }
+}
 
 function mouseZoom(e: WheelEvent) {
   const zoomSpeed = 1 / 200;
@@ -80,8 +91,25 @@ function mouseLeave() {
 }
 
 function keyDown(e: KeyboardEvent) {
-  if (e.key === 'Escape') {
-    resetCurrents();
-    draw();
+  // ignore keys with modifiers
+  if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
+
+  switch (e.key) {
+    case 'Escape':
+      resetCurrents();
+      draw();
+      break;
+
+    case 'r':
+      resetView();
+      draw();
+      break;
   }
+}
+
+function resetData(e: Event) {
+  // throw an exception if the data doesn't parse
+  const circles = JSON.parse((e.target as HTMLElement).dataset.circles ?? 'error');
+  resetCircles(circles);
+  draw();
 }

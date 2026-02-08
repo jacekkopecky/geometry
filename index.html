@@ -15,7 +15,12 @@
     }
     h1 {
       margin: 0;
-      padding: 0.5em 1em;
+    }
+    header {
+      padding: 1em;
+      display: flex;
+      align-items: center;
+      gap: 1em;
     }
     canvas {
       border: solid thin black;
@@ -25,7 +30,11 @@
 </head>
 
 <body>
-  <h1>geometry</h1>
+  <header>
+    <h1>geometry</h1>
+    <button data-circles="[[0,0,1]]" class="reset">Reset one circle</button>
+    <button data-circles="[[-1,0],[1,0]]" class="reset">Reset two points</button>
+  </header>
 
   <canvas width="200" height="200"></canvas>
   <script type="module" src="dist/index.js"></script>

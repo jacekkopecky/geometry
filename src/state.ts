@@ -2,6 +2,7 @@ import type { Circle, Point } from './types.js';
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 100000;
+const DEFAULT_SCALE = 80 * window.devicePixelRatio;
 
 const LOCAL_STORAGE_KEY = 'geometry-state';
 
@@ -16,7 +17,7 @@ interface ViewParams {
 }
 
 export const viewParams: ViewParams = {
-  _scale: 80 * window.devicePixelRatio,
+  _scale: DEFAULT_SCALE,
   get scale() {
     return this._scale;
   },
@@ -77,6 +78,18 @@ export function addPoint(p: Point) {
 
 export function setEndPoint(p: Point) {
   if (currentStartPoint) currentEndPoint = p;
+}
+
+export function resetView() {
+  viewParams._scale = DEFAULT_SCALE;
+  viewParams._offset = [0, 0];
+  saveState();
+}
+
+export function resetCircles(arr: Circle[]) {
+  circles.length = 0;
+  circles.push(...arr);
+  resetView();
 }
 
 function saveState() {

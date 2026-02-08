@@ -9,10 +9,13 @@ the Napoleon's Problem.
 - [x] drag and zoom with mouse
 - [x] add a new circle (center, point on circle), escape to cancel
 - [x] add a point (double click on center)
-- [ ] save state in localStorage
+- [x] save state in localStorage
 - [ ] snapping to nearest point within some radius
+- [ ] snapping to nearest circle intersection within some radius
+  - probably remember intersections so it becomes the above
 - [ ] snapping to nearest point on a nearby circle
-- [ ] reset to a single circle, or two points
-- [ ] reset view to initial zoom and offset
+- [x] reset to a single circle, or two points
+- [x] reset view to initial zoom and offset
 - [ ] highlight first circle somehow, maybe use colours for non-point circles, starting with black
 - [ ] remove selected or last point/circle?
+- [ ] add names to points and circles, with unnamed ones supported

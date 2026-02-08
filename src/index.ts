@@ -1,1 +1,1 @@
-import './mouse.js';
+import './ui-controls.js';
