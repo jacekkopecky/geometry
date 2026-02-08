@@ -1,5 +1,5 @@
 import { canvas, draw, getCursorCoords } from './canvas.js';
-import { nextColor } from './colors.js';
+import { getCurrentColor, nextColor } from './colors.js';
 import { dist } from './nearest.js';
 import {
   addFromUnfinished,
@@ -89,9 +89,9 @@ function updateUnfinished() {
     const [x, y] = currentStartPoint;
     const radiusStart = currentRadiusStartPoint || currentStartPoint;
     const r = currentEndPoint ? dist(radiusStart, currentEndPoint) : 0;
-    setUnfinished([x, y, r]);
-  } else {
-    // a single point or nothing
+    setUnfinished([x, y, r, getCurrentColor()]);
+  } else if (currentStartPoint) {
+    // a single point or nothing, always in default color
     setUnfinished(currentStartPoint);
   }
 }

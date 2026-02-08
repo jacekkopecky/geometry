@@ -8,7 +8,8 @@ const c = canvas.getContext('2d')!;
 
 const CROSS_STYLE = 'black';
 const CROSS_SIZE = 30;
-const POINT_RADIUS = 4;
+const LINE_WIDTH = 1.5;
+const POINT_RADIUS = 3 * LINE_WIDTH;
 const SNAP_DISTANCE = CROSS_SIZE * Math.sqrt(2);
 
 window.addEventListener('load', resizeCanvas);
@@ -29,7 +30,7 @@ function setCanvasTransform() {
   c.scale(scale, scale);
   c.translate(...viewParams.offset);
 
-  c.lineWidth = 1 / scale;
+  c.lineWidth = LINE_WIDTH / scale;
 }
 
 export function draw() {

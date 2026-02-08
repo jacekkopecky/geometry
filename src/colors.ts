@@ -1,6 +1,6 @@
 const colorsEl = document.querySelector<HTMLElement>('.color .box')!;
 
-const COLORS = ['black', 'red', 'blue', 'green'];
+const COLORS = ['black', 'red', '#47f', '#0b0'];
 
 let currentColorIndex = 1;
 
