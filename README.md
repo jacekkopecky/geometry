@@ -18,5 +18,10 @@ the Napoleon's Problem.
 - [x] reset view to initial zoom and offset
 - [x] highlight first circle somehow, maybe use colours for non-point circles, starting with black
 - [x] remove selected or last point/circle?
+  - [ ] add permadeleting (shift d?, hold d?
 - [ ] add names to points and circles, with unnamed ones supported
 - [x] create a circle from 3 points: center C, radius |A-B|
+- [ ] add drawing of lines?
+  - would need a redoing of state, from simple arrays to objects with type?
+- [ ] when we press alt/meta, having selected the first point, the circle should already collapse
+- [x] on escape, toggle deleting to false

@@ -159,6 +159,7 @@ function keyUp(e: KeyboardEvent) {
   switch (e.key) {
     case 'Escape':
       resetCurrents();
+      toggleDelete(false);
       draw();
       break;
 
