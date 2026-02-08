@@ -5,10 +5,14 @@ the Napoleon's Problem.
 
 ## todo
 
-- [ ] draw from array of points and circles
-- [ ] drag with mouse
-- [ ] add a new circle (center, point on circle)
-- [ ] add a point (double click on center)
+- [x] draw from array of points and circles
+- [x] drag and zoom with mouse
+- [x] add a new circle (center, point on circle), escape to cancel
+- [x] add a point (double click on center)
+- [ ] save state in localStorage
 - [ ] snapping to nearest point within some radius
 - [ ] snapping to nearest point on a nearby circle
 - [ ] reset to a single circle, or two points
+- [ ] reset view to initial zoom and offset
+- [ ] highlight first circle somehow, maybe use colours for non-point circles, starting with black
+- [ ] remove selected or last point/circle?
