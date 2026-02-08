@@ -19,3 +19,4 @@ the Napoleon's Problem.
 - [ ] highlight first circle somehow, maybe use colours for non-point circles, starting with black
 - [ ] remove selected or last point/circle?
 - [ ] add names to points and circles, with unnamed ones supported
+- [x] create a circle from 3 points: center C, radius |A-B|

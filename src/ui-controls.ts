@@ -15,6 +15,7 @@ const MIN_MOVE_TIME_MS = 100;
 
 // variables for the workflow of selecting points that define a circle
 let currentStartPoint: Point | undefined;
+let currentRadiusStartPoint: Point | undefined;
 let currentEndPoint: Point | undefined;
 
 // variables for dragging the canvas
@@ -63,23 +64,31 @@ function mouseDown(e: MouseEvent) {
   currentMouseMoveMinTime = Date.now() + MIN_MOVE_TIME_MS;
 }
 
-function addPoint(p: Point) {
+function addPoint(p: Point, startOtherRadius = false) {
   if (currentStartPoint) {
-    addFromUnfinished();
-    resetCurrents();
+    if (!startOtherRadius) {
+      addFromUnfinished();
+      resetCurrents();
+    } else {
+      currentRadiusStartPoint = p;
+      currentEndPoint = undefined;
+      updateUnfinished();
+    }
   } else {
     currentStartPoint = p;
     currentEndPoint = undefined;
+    currentRadiusStartPoint = undefined;
     updateUnfinished();
   }
 }
 
 function updateUnfinished() {
-  if (currentStartPoint && currentEndPoint) {
-    // a circle added
+  if (currentStartPoint && (currentEndPoint || currentRadiusStartPoint)) {
+    // a circle
     const [x, y] = currentStartPoint;
-    const c: Circle = [x, y, dist(currentStartPoint, currentEndPoint)];
-    setUnfinished(c);
+    const radiusStart = currentRadiusStartPoint || currentStartPoint;
+    const r = currentEndPoint ? dist(radiusStart, currentEndPoint) : 0;
+    setUnfinished([x, y, r]);
   } else {
     // a single point or nothing
     setUnfinished(currentStartPoint);
@@ -90,7 +99,8 @@ function mouseUp(e: MouseEvent) {
   if (currentMouseStart && !currentMouseMoving) {
     // clicked without a move
     const snap = !e.shiftKey;
-    addPoint(getCursorCoords(e, snap));
+    const startOtherRadius = currentRadiusStartPoint == null && (e.altKey || e.metaKey);
+    addPoint(getCursorCoords(e, snap), startOtherRadius);
     draw();
   } else {
     draw();
@@ -151,8 +161,9 @@ function keyDown(e: KeyboardEvent) {
 }
 
 function resetCurrents() {
-  currentEndPoint = undefined;
   currentStartPoint = undefined;
+  currentRadiusStartPoint = undefined;
+  currentEndPoint = undefined;
   setUnfinished(undefined);
 }
 
