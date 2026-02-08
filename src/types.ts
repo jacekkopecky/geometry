@@ -1,2 +1,2 @@
-export type Point = [x: number, y: number];
-export type Circle = [x: number, y: number, radius?: number];
+export type Point = Readonly<[x: number, y: number]>;
+export type Circle = Readonly<[x: number, y: number, radius?: number]>;

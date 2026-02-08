@@ -3,7 +3,17 @@ import type { Circle, Point } from './types.js';
 const MIN_SCALE = 1;
 const MAX_SCALE = 100000;
 
-export const viewParams = {
+interface ViewParams {
+  scale: number;
+  readonly offset: Point;
+  moveOffset(x: number, y: number): void;
+
+  // internal
+  _scale: number;
+  _offset: Point;
+}
+
+export const viewParams: ViewParams = {
   _scale: 80 * window.devicePixelRatio,
   get scale() {
     return this._scale;
@@ -12,7 +22,14 @@ export const viewParams = {
     this._scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, n));
   },
 
-  offset: [0, 0] as Point,
+  _offset: [0, 0] as Point,
+  get offset() {
+    return this._offset;
+  },
+
+  moveOffset(x, y) {
+    this._offset = [this._offset[0] + x, this._offset[1] + y];
+  },
 };
 
 export const circles: Circle[] = [

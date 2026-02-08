@@ -27,8 +27,7 @@ function mouseZoom(e: WheelEvent) {
     viewParams.scale *= 1 - delta * zoomSpeed;
 
     const [newX, newY] = getCursorCoords(e);
-    viewParams.offset[0] -= oldX - newX;
-    viewParams.offset[1] -= oldY - newY;
+    viewParams.moveOffset(newX - oldX, newY - oldY);
 
     draw();
   }
@@ -45,8 +44,6 @@ function mouseDown(e: MouseEvent) {
 }
 
 function mouseUp(e: MouseEvent) {
-  const [x, y] = getCursorCoords(e);
-
   if (currentMouseStart && !currentMouseMoving) {
     // clicked without a move
     addPoint(getCursorCoords(e));
@@ -68,8 +65,7 @@ function mouseMove(e: MouseEvent) {
     }
     draw();
   } else {
-    viewParams.offset[0] += x - currentMouseStart[0];
-    viewParams.offset[1] += y - currentMouseStart[1];
+    viewParams.moveOffset(x - currentMouseStart[0], y - currentMouseStart[1]);
     draw();
 
     // recompute canvas coords as we've moved the offset
