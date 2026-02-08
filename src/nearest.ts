@@ -62,19 +62,22 @@ export function dist(p1: Point | Circle, p2: Point | Circle) {
 }
 
 export function getCircleIntersections(c: Circle, circles: Circle[]): Point[] {
-  const retval: Point[] = [];
+  if (!c[2]) return [];
 
+  const retval: Point[] = [];
   for (const c2 of circles) {
     retval.push(...getIntersectionsOfTwoCircles(c, c2));
   }
-
   return retval;
 }
 
 function getIntersectionsOfTwoCircles(c1: Circle, c2: Circle): Point[] {
   const d = dist(c1, c2);
-  const r1 = c1[2] ?? 0;
-  const r2 = c2[2] ?? 0;
+  const r1 = c1[2];
+  const r2 = c2[2];
+
+  // if either circle is a point, return no points
+  if (!r1 || !r2) return [];
 
   // if the circles are too far (or just touching), return no points
   if (d >= r1 + r2) return [];

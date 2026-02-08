@@ -1,23 +1,31 @@
 import { canvas, draw, getCursorCoords } from './canvas.js';
+import { dist } from './nearest.js';
 import {
-  addPoint,
-  currentStartPoint,
+  addFromUnfinished,
   resetCircles,
-  resetCurrents,
   resetView,
   setCursorPosition,
-  setEndPoint,
+  setUnfinished,
   viewParams,
 } from './state.js';
-import type { Point } from './types.js';
+import type { Circle, Point } from './types.js';
 
 // a move shorter than this time in milliseconds counts as a click
 const MIN_MOVE_TIME_MS = 100;
 
+// variables for the workflow of selecting points that define a circle
+let currentStartPoint: Point | undefined;
+let currentEndPoint: Point | undefined;
+
+// variables for dragging the canvas
+let currentMouseStart: Point | undefined = undefined;
+let currentMouseMoving = false;
+let currentMouseMoveMinTime = 0;
+
 window.addEventListener('load', setUpListeners);
 
 function setUpListeners() {
-  canvas.addEventListener('wheel', mouseZoom);
+  canvas.addEventListener('wheel', mouseZoom, { passive: false });
   canvas.addEventListener('mousemove', mouseMove);
   canvas.addEventListener('mousedown', mouseDown);
   canvas.addEventListener('mouseup', mouseUp);
@@ -26,11 +34,14 @@ function setUpListeners() {
 
   const resetButtons = document.querySelectorAll('button.reset');
   for (const btn of resetButtons) {
-    btn.addEventListener('click', resetData);
+    btn.addEventListener('click', resetCanvasData);
   }
 }
 
 function mouseZoom(e: WheelEvent) {
+  e.stopPropagation();
+  e.preventDefault();
+
   const zoomSpeed = 1 / 200;
   const max = 20;
 
@@ -45,18 +56,34 @@ function mouseZoom(e: WheelEvent) {
 
     draw();
   }
-
-  e.stopPropagation();
-  e.preventDefault();
 }
-
-let currentMouseStart: Point | undefined = undefined;
-let currentMouseMoving = false;
-let currentMouseMoveMinTime = 0;
 
 function mouseDown(e: MouseEvent) {
   currentMouseStart = getCursorCoords(e);
   currentMouseMoveMinTime = Date.now() + MIN_MOVE_TIME_MS;
+}
+
+function addPoint(p: Point) {
+  if (currentStartPoint) {
+    addFromUnfinished();
+    resetCurrents();
+  } else {
+    currentStartPoint = p;
+    currentEndPoint = undefined;
+    updateUnfinished();
+  }
+}
+
+function updateUnfinished() {
+  if (currentStartPoint && currentEndPoint) {
+    // a circle added
+    const [x, y] = currentStartPoint;
+    const c: Circle = [x, y, dist(currentStartPoint, currentEndPoint)];
+    setUnfinished(c);
+  } else {
+    // a single point or nothing
+    setUnfinished(currentStartPoint);
+  }
 }
 
 function mouseUp(e: MouseEvent) {
@@ -90,11 +117,12 @@ function mouseMove(e: MouseEvent) {
     // not dragging
 
     const snap = !e.shiftKey;
-    const [x, y] = getCursorCoords(e, snap);
-    setCursorPosition([x, y]);
+    const p = getCursorCoords(e, snap);
+    setCursorPosition(p);
 
     if (currentStartPoint) {
-      setEndPoint([x, y]);
+      currentEndPoint = p;
+      updateUnfinished();
     }
     draw();
   }
@@ -122,7 +150,13 @@ function keyDown(e: KeyboardEvent) {
   }
 }
 
-function resetData(e: Event) {
+function resetCurrents() {
+  currentEndPoint = undefined;
+  currentStartPoint = undefined;
+  setUnfinished(undefined);
+}
+
+function resetCanvasData(e: Event) {
   // throw an exception if the data doesn't parse
   const circles = JSON.parse((e.target as HTMLElement).dataset.circles ?? 'error');
   resetCircles(circles);

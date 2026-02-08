@@ -1,4 +1,4 @@
-import { dist, getCircleIntersections } from './nearest.js';
+import { getCircleIntersections } from './nearest.js';
 import type { Circle, Point } from './types.js';
 
 const MIN_SCALE = 1;
@@ -43,48 +43,32 @@ export const circles: Circle[] = [
   [0, 0],
 ];
 
-loadState();
-
 export let currentCursor: Point | undefined = undefined;
-export let currentStartPoint: Point | undefined = undefined;
-export let currentEndPoint: Point | undefined = undefined;
+export let currentUnfinished: Circle | undefined = undefined;
+
+loadState();
 
 export function setCursorPosition(p?: Point) {
   currentCursor = p;
 }
 
-export function resetCurrents() {
-  currentStartPoint = undefined;
-  currentEndPoint = undefined;
-}
-
-export function addPoint(p: Point) {
-  if (currentStartPoint) {
-    if (currentEndPoint) {
-      // a circle added
-      const [x, y] = currentStartPoint;
-      const c: Circle = [x, y, dist(currentStartPoint, currentEndPoint)];
-      const intersections = getCircleIntersections(c, circles);
-      circles.push(c, ...intersections);
-    } else {
-      // a single point added
-      circles.push(p);
-    }
-    saveState();
-    resetCurrents();
-  } else {
-    currentStartPoint = p;
-    currentEndPoint = undefined;
+export function addFromUnfinished() {
+  if (currentUnfinished) {
+    const intersections = getCircleIntersections(currentUnfinished, circles);
+    circles.push(currentUnfinished, ...intersections);
   }
+  saveState();
+  currentUnfinished = undefined;
 }
 
-export function setEndPoint(p: Point) {
-  if (currentStartPoint) currentEndPoint = p;
+export function setUnfinished(c?: Circle) {
+  currentUnfinished = c;
 }
 
 export function resetView() {
   viewParams._scale = DEFAULT_SCALE;
   viewParams._offset = [0, 0];
+  currentUnfinished = undefined;
   saveState();
 }
 

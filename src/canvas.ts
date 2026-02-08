@@ -1,5 +1,5 @@
 import { findNearestPoint } from './nearest.js';
-import { circles, currentCursor, currentEndPoint, currentStartPoint, viewParams } from './state.js';
+import { circles, currentCursor, currentUnfinished, viewParams } from './state.js';
 import type { Point } from './types.js';
 
 export const canvas = document.querySelector('canvas')!;
@@ -43,10 +43,9 @@ export function draw() {
     }
   }
 
-  if (currentStartPoint) {
-    const [x, y] = currentStartPoint;
-    if (currentEndPoint) {
-      const r = Math.sqrt((x - currentEndPoint[0]) ** 2 + (y - currentEndPoint[1]) ** 2);
+  if (currentUnfinished) {
+    const [x, y, r] = currentUnfinished;
+    if (r) {
       drawCircle(x, y, r, 'red');
     } else {
       drawPoint(x, y, 'red');
