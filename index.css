@@ -1,0 +1,41 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  margin: 0;
+}
+
+header {
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+canvas {
+  border: solid thin black;
+  flex-grow: 1;
+}
+
+.color {
+  display: flex;
+  gap: 1ch;
+  align-items: center;
+
+  .box {
+    height: 1em;
+    width: 1em;
+    border: solid thin black;
+    border-radius: 0.2em;
+  }
+}

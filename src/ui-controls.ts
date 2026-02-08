@@ -1,4 +1,5 @@
 import { canvas, draw, getCursorCoords } from './canvas.js';
+import { nextColor } from './colors.js';
 import { dist } from './nearest.js';
 import {
   addFromUnfinished,
@@ -31,7 +32,7 @@ function setUpListeners() {
   canvas.addEventListener('mousedown', mouseDown);
   canvas.addEventListener('mouseup', mouseUp);
   canvas.addEventListener('mouseleave', mouseLeave);
-  document.addEventListener('keydown', keyDown);
+  document.addEventListener('keyup', keyUp);
 
   const resetButtons = document.querySelectorAll('button.reset');
   for (const btn of resetButtons) {
@@ -145,7 +146,7 @@ function mouseLeave() {
   draw();
 }
 
-function keyDown(e: KeyboardEvent) {
+function keyUp(e: KeyboardEvent) {
   // ignore keys with modifiers
   if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
 
@@ -157,6 +158,11 @@ function keyDown(e: KeyboardEvent) {
 
     case 'r':
       resetView();
+      draw();
+      break;
+
+    case 'c':
+      nextColor();
       draw();
       break;
   }

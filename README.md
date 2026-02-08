@@ -16,7 +16,7 @@ the Napoleon's Problem.
 - [x] snapping to nearest point on a nearby circle
 - [x] reset to a single circle, or two points
 - [x] reset view to initial zoom and offset
-- [ ] highlight first circle somehow, maybe use colours for non-point circles, starting with black
+- [.] highlight first circle somehow, maybe use colours for non-point circles, starting with black
 - [ ] remove selected or last point/circle?
 - [ ] add names to points and circles, with unnamed ones supported
 - [x] create a circle from 3 points: center C, radius |A-B|

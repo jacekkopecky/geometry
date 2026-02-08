@@ -1,3 +1,4 @@
+import { getCurrentColor } from './colors.js';
 import { findNearestPoint } from './nearest.js';
 import { circles, currentCursor, currentUnfinished, viewParams } from './state.js';
 import type { Point } from './types.js';
@@ -35,20 +36,20 @@ export function draw() {
   clearCanvas();
   setCanvasTransform();
 
-  for (const [x, y, radius] of circles) {
+  for (const [x, y, radius, color] of circles) {
     if (radius) {
-      drawCircle(x, y, radius);
+      drawCircle(x, y, radius, color);
     } else {
-      drawPoint(x, y);
+      drawPoint(x, y, color);
     }
   }
 
   if (currentUnfinished) {
     const [x, y, r] = currentUnfinished;
     if (r) {
-      drawCircle(x, y, r, 'red');
+      drawCircle(x, y, r, getCurrentColor());
     } else {
-      drawPoint(x, y, 'red');
+      drawPoint(x, y, getCurrentColor());
     }
   } else {
     drawCursor();
