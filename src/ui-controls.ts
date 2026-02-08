@@ -11,6 +11,9 @@ import {
 } from './state.js';
 import type { Point } from './types.js';
 
+// a move shorter than this time in milliseconds counts as a click
+const MIN_MOVE_TIME_MS = 100;
+
 window.addEventListener('load', setUpListeners);
 
 function setUpListeners() {
@@ -49,9 +52,11 @@ function mouseZoom(e: WheelEvent) {
 
 let currentMouseStart: Point | undefined = undefined;
 let currentMouseMoving = false;
+let currentMouseMoveMinTime = 0;
 
 function mouseDown(e: MouseEvent) {
   currentMouseStart = getCursorCoords(e);
+  currentMouseMoveMinTime = Date.now() + MIN_MOVE_TIME_MS;
 }
 
 function mouseUp(e: MouseEvent) {
@@ -70,6 +75,9 @@ function mouseUp(e: MouseEvent) {
 function mouseMove(e: MouseEvent) {
   if (currentMouseStart) {
     // we're dragging the canvas
+
+    // ignore the first MIN_MOVE_TIME_MS of a move
+    if (Date.now() < currentMouseMoveMinTime) return;
 
     const [x, y] = getCursorCoords(e);
     viewParams.moveOffset(x - currentMouseStart[0], y - currentMouseStart[1]);
